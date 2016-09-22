@@ -4,6 +4,10 @@
   shell: '{{ apigee_all }} stop'
   ignore_errors: yes
 
+- name: Clear all artifacts from YUM repo
+  shell: 'yum clean all'
+  ignore_errors: yes
+
 - name: Remove apigee, edge, baas and qpid packages
   ignore_errors: yes
   yum:
@@ -17,10 +21,6 @@
   - python-qpid-*
   - libdb-cxx-*
   - nginx-*
-
-- name: Clear all artifacts from YUM repo
-  shell: 'yum clean all'
-  ignore_errors: yes
 
 - name: Set target bootstrap script name for 4.16.01
   set_fact:
@@ -68,4 +68,17 @@
   when: kill_user
   async: 45
   poll: 0
+
+  - name: Create the apigee user
+    user:
+      name: "{{ opdk_user_name }}"
+      remove: yes
+      state: absent
+
+- name: Remove apigee user
+  - name: Create the apigee group
+    group:
+      name: "{{ opdk_group_name }}"
+      state: absent
+
 
