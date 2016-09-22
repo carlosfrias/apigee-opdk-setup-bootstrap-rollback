@@ -51,7 +51,7 @@
     follow: yes
   with_items:
   - '{{ apigee_installation_home }}/data'
-  - '{{ apigee_installation_home }}/var/log'
+  - '/opt/nginx'
   when: remove_data_on_rollback is defined and remove_data_on_rollback
 
 - name: Determine current user
