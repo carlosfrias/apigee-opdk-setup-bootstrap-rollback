@@ -52,7 +52,6 @@
   with_items:
   - '{{ apigee_installation_home }}/data'
   - '/opt/nginx'
-  when: remove_data_on_rollback is defined and remove_data_on_rollback
 
 - name: Determine current user
   shell: whoami
