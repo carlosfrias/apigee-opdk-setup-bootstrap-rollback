@@ -69,16 +69,17 @@
   async: 45
   poll: 0
 
-  - name: Create the apigee user
-    user:
-      name: "{{ opdk_user_name }}"
-      remove: yes
-      state: absent
-
 - name: Remove apigee user
-  - name: Create the apigee group
-    group:
-      name: "{{ opdk_group_name }}"
-      state: absent
+  ignore_errors: yes
+  user:
+    name: "{{ opdk_user_name }}"
+    remove: yes
+    state: absent
+
+- name: Create the apigee group
+  ignore_errors: yes
+  group:
+    name: "{{ opdk_group_name }}"
+    state: absent
 
 
