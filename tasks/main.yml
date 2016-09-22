@@ -5,6 +5,7 @@
   ignore_errors: yes
 
 - name: Remove apigee, edge, baas and qpid packages
+  ignore_errors: yes
   yum:
     name: '{{ item }}'
     state: absent
