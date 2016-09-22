@@ -78,7 +78,7 @@
   async: 45
   poll: 0
 
-- name: Create the apigee group
+- name: Remove the apigee group
   ignore_errors: yes
   group:
     name: "{{ opdk_group_name }}"
