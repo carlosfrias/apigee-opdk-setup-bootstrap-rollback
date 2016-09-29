@@ -27,7 +27,7 @@
     bootstrap_script: '{{ opdk_installer_path }}/bootstrap.sh'
   when: opdk_version | version_compare('4.16.01', '==')
 
-- name: Set target bootstrap script name for 4.16.05
+- name: Set target bootstrap script name for version > 4.16.01
   set_fact:
     bootstrap_script: '{{ opdk_installer_path }}/bootstrap_{{ opdk_version }}.sh'
   when: opdk_version | version_compare('4.16.01', '>')
@@ -41,7 +41,7 @@
   with_items:
   - '{{ bootstrap_script }}'
   - '{{ linked_apigee_installation_home }}'
-  - /opt/nginx
+  - /opt/nginx/conf.d
 
 - name: Remove analytics data on rolback
   ignore_errors: yes
@@ -51,7 +51,7 @@
     follow: yes
   with_items:
   - '{{ apigee_installation_home }}/data'
-  - '/opt/nginx'
+  when: remove_data is defined and remove_data
 
 - name: Determine current user
   shell: whoami
@@ -60,6 +60,7 @@
 - name: Determine if safe to kill user owned process
   set_fact:
     kill_user: '{{ whoami.stdout != opdk_user_name }}'
+  when: remove_data is defined and remove_data
 
 - name: Release any apigee user owned processes
   shell: 'pkill -u {{ opdk_user_name }}'
@@ -67,6 +68,7 @@
   when: kill_user
   async: 45
   poll: 0
+  when: remove_data is defined and remove_data
 
 - name: Remove apigee user
   ignore_errors: yes
@@ -76,6 +78,7 @@
     state: absent
   async: 45
   poll: 0
+  when: remove_data is defined and remove_data
 
 - name: Remove the apigee group
   ignore_errors: yes
@@ -84,3 +87,4 @@
     state: absent
   async: 45
   poll: 0
+  when: remove_data is defined and remove_data
