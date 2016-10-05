@@ -1,14 +1,16 @@
 ---
 # tasks file for opdk-setup-bootstrap-rollback
 - name: Gracefully Stop apigee components, if possible
-  shell: '{{ apigee_all }} stop'
   ignore_errors: yes
+  shell: '{{ apigee_all }} stop'
 
 - name: Clear all artifacts from YUM repo
-  shell: 'yum clean all'
+  become: yes
   ignore_errors: yes
+  shell: 'yum clean all'
 
 - name: Remove apigee, edge, baas and qpid packages
+  become: yes
   ignore_errors: yes
   yum:
     name: '{{ item }}'
@@ -63,6 +65,7 @@
   when: remove_data is defined and remove_data
 
 - name: Release any apigee user owned processes
+  become: yes
   shell: 'pkill -u {{ opdk_user_name }}'
   ignore_errors: yes
   when: kill_user
@@ -71,6 +74,7 @@
   when: remove_data is defined and remove_data
 
 - name: Remove apigee user
+  become: yes
   ignore_errors: yes
   user:
     name: "{{ opdk_user_name }}"
@@ -81,6 +85,7 @@
   when: remove_data is defined and remove_data
 
 - name: Remove the apigee group
+  become: yes
   ignore_errors: yes
   group:
     name: "{{ opdk_group_name }}"
