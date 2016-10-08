@@ -1,5 +1,5 @@
 ---
-# tasks file for opdk-setup-bootstrap-rollback
+# tasks file for apigee-opdk-setup-bootstrap-rollback
 - name: Gracefully Stop apigee components, if possible
   ignore_errors: yes
   shell: '{{ apigee_all }} stop'
@@ -44,16 +44,19 @@
   - '{{ bootstrap_script }}'
   - '{{ linked_apigee_installation_home }}'
   - /opt/nginx/conf.d
+  - '{{ opdk_installation_config_file }}'
+  - '{{ apigee_validate_config_file }}'
+  - '{{ onboarding_config_file_path }}'
 
-- name: Remove analytics data on rolback
+- name: Remove /opt/apigee on rolback
   ignore_errors: yes
   file:
     path: '{{ item }}'
     state: absent
     follow: yes
   with_items:
-  - '{{ apigee_installation_home }}/data'
-  when: remove_data is defined and remove_data
+  - '{{ apigee_installation_home }}'
+  when: remove_apigee is defined and remove_apigee
 
 - name: Determine current user
   shell: whoami
@@ -62,7 +65,7 @@
 - name: Determine if safe to kill user owned process
   set_fact:
     kill_user: '{{ whoami.stdout != opdk_user_name }}'
-  when: remove_data is defined and remove_data
+  when: remove_apigee is defined and remove_apigee
 
 - name: Release any apigee user owned processes
   become: yes
@@ -71,7 +74,7 @@
   when: kill_user
   async: 45
   poll: 0
-  when: remove_data is defined and remove_data
+  when: remove_apigee is defined and remove_apigee
 
 - name: Remove apigee user
   become: yes
@@ -82,7 +85,7 @@
     state: absent
   async: 45
   poll: 0
-  when: remove_data is defined and remove_data
+  when: remove_apigee is defined and remove_apigee
 
 - name: Remove the apigee group
   become: yes
@@ -92,4 +95,4 @@
     state: absent
   async: 45
   poll: 0
-  when: remove_data is defined and remove_data
+  when: remove_apigee is defined and remove_apigee
