@@ -35,6 +35,7 @@
   when: opdk_version | version_compare('4.16.01', '>')
 
 - name: Remove bootstrap script and folders
+  become: yes
   ignore_errors: yes
   file:
     path: '{{ item }}'
@@ -47,6 +48,9 @@
   - '{{ opdk_installation_config_file }}'
   - '{{ apigee_validate_config_file }}'
   - '{{ onboarding_config_file_path }}'
+  - /etc/yum//vars/apigeepassword
+  - /etc/yum//vars/apigeepriostage
+  - /etc/yum//vars/apigeeuser
 
 - block:
 
