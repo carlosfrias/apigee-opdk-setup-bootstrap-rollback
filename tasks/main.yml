@@ -69,7 +69,7 @@
   - name: Clean /tmp
     shell: 'rm -rf {{ item }}'
     with_items:
-    - *.log
+    - '*.log'
     - bootstrap*.sh
 
   - name: Determine current user
