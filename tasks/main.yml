@@ -48,6 +48,7 @@
   - '{{ opdk_installation_config_file }}'
   - '{{ apigee_validate_config_file }}'
   - '{{ onboarding_config_file_path }}'
+  - '{{ opdk_license_source_file_name }}'
   - /etc/yum//vars/apigeepassword
   - /etc/yum//vars/apigeepriostage
   - /etc/yum//vars/apigeeuser
@@ -64,6 +65,12 @@
     with_items:
     - '{{ apigee_installation_home }}'
     - /opt/nginx
+
+  - name: Clean /tmp
+    shell: 'rm -rf {{ item }}'
+    with_items:
+    - *.log
+    - bootstrap*.sh
 
   - name: Determine current user
     shell: whoami
