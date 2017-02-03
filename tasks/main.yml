@@ -67,7 +67,7 @@
     - /opt/nginx
 
   - name: Clean /tmp
-    shell: 'rm -rf {{ item }}'
+    shell: 'rm -rf /tmp/{{ item }}'
     with_items:
     - '*.log'
     - bootstrap*.sh
