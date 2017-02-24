@@ -49,9 +49,9 @@
   - '{{ apigee_validate_config_file }}'
   - '{{ onboarding_config_file_path }}'
   - '{{ opdk_license_target_file_path }}'
-  - /etc/yum//vars/apigeepassword
-  - /etc/yum//vars/apigeepriostage
-  - /etc/yum//vars/apigeeuser
+  - /etc/yum/vars/apigeepassword
+  - /etc/yum/vars/apigeepriostage
+  - /etc/yum/vars/apigeeuser
 
 - block:
 
