@@ -74,14 +74,14 @@
   - name: Find /tmp scripts & logs to remove on rollback
     find:
       path: '{{ opdk_installer_path }}'
-      pattern: *.log
+      pattern: '*.log'
       file_type: 'file'
     register: tmp_log_files
 
   - name: Find /tmp scripts & logs to remove on rollback
     find:
       path: '{{ opdk_installer_path }}'
-      pattern: bootstrap*
+      pattern: 'bootstrap*'
       file_type: 'file'
     register: bootstrap_files
 
