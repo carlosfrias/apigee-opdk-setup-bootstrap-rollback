@@ -104,11 +104,11 @@
       state: absent
     with_items:
     - /opt/nginx
-    - {{ apigee_installation_home }}/data
-    - {{ apigee_installation_home }}/etc
-    - {{ apigee_installation_home }}/token
-    - {{ apigee_installation_home }}/var/lock
-    - {{ apigee_installation_home }}/var/run
+    - "{{ apigee_installation_home }}/data"
+    - "{{ apigee_installation_home }}/etc"
+    - "{{ apigee_installation_home }}/token"
+    - "{{ apigee_installation_home }}/var/lock"
+    - "{{ apigee_installation_home }}/var/run"
 
   - name: Determine current user
     shell: whoami
