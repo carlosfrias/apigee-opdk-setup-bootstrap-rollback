@@ -100,7 +100,7 @@
 
   - name: Remove nginx
     file:
-      path: /opt/nginx
+      path: "{{ item }}"
       state: absent
     with_items:
     - /opt/nginx
