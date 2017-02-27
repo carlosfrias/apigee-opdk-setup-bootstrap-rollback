@@ -69,7 +69,7 @@
       pattern: 'edge-*'
       recurse: no
       file_type: directory
-    register: edge_files
+    register: edge_folders
 
   - name: Find /tmp scripts & logs to remove on rollback
     find:
