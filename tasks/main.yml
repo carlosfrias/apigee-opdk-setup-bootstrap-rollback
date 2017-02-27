@@ -55,22 +55,53 @@
 
 - block:
 
-  - name: Remove /opt/apigee on rolback
+  - name: Find apigee & edge folders to remove on rollback
+    find:
+      path: '{{ apigee_installation_home }}'
+      pattern: 'apigee-*'
+      recurse: no
+      file_type: directory
+    register: apigee_folders
+
+  - name: Find edge folders to remove on rollback
+    find:
+      path: '{{ apigee_installation_home }}'
+      pattern: 'edge-*'
+      recurse: no
+      file_type: directory
+    register: edge_files
+
+  - name: Find /tmp scripts & logs to remove on rollback
+    find:
+      path: '{{ opdk_installer_path }}'
+      pattern: *.log
+      file_type: 'file'
+    register: tmp_log_files
+
+  - name: Find /tmp scripts & logs to remove on rollback
+    find:
+      path: '{{ opdk_installer_path }}'
+      pattern: bootstrap*
+      file_type: 'file'
+    register: bootstrap_files
+
+  - name: Remove apigee & edge folders on rollback
     ignore_errors: yes
     become: yes
     file:
-      path: '{{ item }}'
+      path: '{{ item.path }}'
       state: absent
       follow: yes
     with_items:
-    - '{{ apigee_installation_home }}'
-    - /opt/nginx
+    - '{{ apigee_folders.files }}'
+    - '{{ edge_folders.files }}'
+    - '{{ tmp_log_files.files }}'
+    - '{{ bootstrap_files.files }}'
 
-  - name: Clean /tmp
-    shell: 'rm -rf /tmp/{{ item }}'
-    with_items:
-    - '*.log'
-    - bootstrap*.sh
+  - name: Remove nginx
+    file:
+      path: /opt/nginx
+      state: absent
 
   - name: Determine current user
     shell: whoami
