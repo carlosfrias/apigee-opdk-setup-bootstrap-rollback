@@ -16,10 +16,10 @@
     name: '{{ item }}'
     state: absent
   with_items:
-  - apigee-*
-  - edge-*
-  - baas-*
-  - qpid-*
+  - apigee*
+  - edge*
+  - baas*
+  - qpid*
   - python-qpid-*
   - libdb-cxx-*
   - nginx-*
@@ -58,7 +58,7 @@
   - name: Find apigee & edge folders to remove on rollback
     find:
       path: '{{ apigee_installation_home }}'
-      pattern: 'apigee-*'
+      pattern: 'apigee*'
       recurse: no
       file_type: directory
     register: apigee_folders
@@ -66,7 +66,7 @@
   - name: Find edge folders to remove on rollback
     find:
       path: '{{ apigee_installation_home }}'
-      pattern: 'edge-*'
+      pattern: 'edge*'
       recurse: no
       file_type: directory
     register: edge_folders
