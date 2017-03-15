@@ -126,23 +126,23 @@
     async: 45
     poll: 0
 
-  - name: Remove apigee user
-    ignore_errors: yes
-    become: yes
-    user:
-      name: "{{ opdk_user_name }}"
-      remove: yes
-      state: absent
-    async: 45
-    poll: 0
+#  - name: Remove apigee user
+#    ignore_errors: yes
+#    become: yes
+#    user:
+#      name: "{{ opdk_user_name }}"
+#      remove: yes
+#      state: absent
+#    async: 45
+#    poll: 0
 
-  - name: Remove the apigee group
-    ignore_errors: yes
-    become: yes
-    group:
-      name: "{{ opdk_group_name }}"
-      state: absent
-    async: 45
-    poll: 0
+#  - name: Remove the apigee group
+#    ignore_errors: yes
+#    become: yes
+#    group:
+#      name: "{{ opdk_group_name }}"
+#      state: absent
+#    async: 45
+#    poll: 0
 
   when: remove_apigee is defined and remove_apigee
