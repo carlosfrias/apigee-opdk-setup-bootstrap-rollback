@@ -43,7 +43,6 @@
     follow: yes
   with_items:
   - '{{ bootstrap_script }}'
-  - '{{ linked_apigee_installation_home }}'
   - /opt/nginx/conf.d
   - '{{ opdk_installation_config_file }}'
   - '{{ apigee_validate_config_file }}'
