@@ -126,3 +126,13 @@
     poll: 0
 
   when: remove_apigee is defined and remove_apigee
+
+- block:
+  - name: Clear Edge logs on rollback
+    find:
+      path: '{{ apigee_installation_home }}'
+      pattern: '*.log'
+      file_type: 'file'
+    register: tmp_log_files
+
+  when: clear_logs is defined and clear_logs
