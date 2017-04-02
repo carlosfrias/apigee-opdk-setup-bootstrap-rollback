@@ -133,6 +133,7 @@
       path: '{{ apigee_installation_home }}'
       pattern: '*.log'
       file_type: 'file'
+      recurse: yes
     register: tmp_log_files
 
   - debug: var=tmp_log_files
