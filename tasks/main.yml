@@ -134,14 +134,14 @@
       pattern: '*.log'
       file_type: 'file'
       recurse: yes
-    register: tmp_log_files
+    register: tmp_log
 
-  - debug: var=tmp_log_files
+  - debug: var=tmp_log
 
   - name: Remove logs
     file:
       path: "{{ item.path }}"
       state: absent
-    with_items: "{{ tmp_log_files.files }}"
+    with_items: "{{ tmp_log.files }}"
 
   when: clear_logs is defined and clear_logs | bool == True
