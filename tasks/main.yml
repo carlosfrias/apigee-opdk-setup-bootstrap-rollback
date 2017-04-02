@@ -140,7 +140,7 @@
 
   - name: Remove logs
     file:
-      path: "{{ item }}"
+      path: "{{ item.path }}"
       state: absent
     with_items: "{{ tmp_log_files.files }}"
 
