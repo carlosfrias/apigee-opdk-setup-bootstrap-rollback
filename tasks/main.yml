@@ -141,6 +141,6 @@
     file:
       path: "{{ item }}"
       state: absent
-    with_items: tmp_log_files.files
+    with_items: "{{ tmp_log_files.files }}"
 
   when: clear_logs is defined and clear_logs | bool == True
