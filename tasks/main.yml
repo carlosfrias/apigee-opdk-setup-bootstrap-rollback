@@ -9,20 +9,13 @@
   ignore_errors: yes
   shell: 'yum clean all'
 
-- name: Remove apigee, edge, baas and qpid packages
-  become: yes
-  ignore_errors: yes
-  yum:
-    name: '{{ item }}'
-    state: absent
-  with_items:
-  - apigee*
-  - edge*
-  - baas*
-  - qpid*
-  - python-qpid-*
-  - libdb-cxx-*
-  - nginx-*
+- name: Use no proxy definitions
+  include: no_proxy.yml
+  when: http_proxy is not defined and https_proxy is not defined
+
+- name: Use proxy definitions
+  include: with_proxy.yml
+  when: http_proxy is defined and https_proxy is defined
 
 - name: Set target bootstrap script name for 4.16.01
   set_fact:

@@ -1,0 +1,15 @@
+---
+- name: Remove apigee, edge, baas and qpid packages
+  become: yes
+  ignore_errors: yes
+  yum:
+    name: '{{ item }}'
+    state: absent
+  with_items:
+  - apigee*
+  - edge*
+  - baas*
+  - qpid*
+  - python-qpid-*
+  - libdb-cxx-*
+  - nginx-*
