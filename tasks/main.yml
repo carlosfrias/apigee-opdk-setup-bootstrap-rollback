@@ -10,11 +10,13 @@
   shell: 'yum clean all'
 
 - name: Use no proxy definitions
-  include: no_proxy.yml
+  include_tasks:
+    name: no_proxy.yml
   when: http_proxy is not defined and https_proxy is not defined
 
 - name: Use proxy definitions
-  include: with_proxy.yml
+  include_tasks:
+    name: with_proxy.yml
   when: http_proxy is defined and https_proxy is defined
 
 - name: Set target bootstrap script name for 4.16.01
@@ -26,6 +28,9 @@
   set_fact:
     bootstrap_script: '{{ opdk_installer_path }}/bootstrap_{{ opdk_version }}.sh'
   when: opdk_version | version_compare('4.16.01', '>')
+
+- name: Apigee uninstall
+  shell: "{{ apigee_service }} apigee-service uninstall"
 
 - name: Remove bootstrap script and folders
   become: yes
@@ -46,7 +51,6 @@
   - /etc/yum/vars/apigeeuser
 
 - block:
-
   - name: Find apigee & edge folders to remove on rollback
     find:
       path: '{{ apigee_installation_home }}'
@@ -128,8 +132,6 @@
       file_type: 'file'
       recurse: yes
     register: tmp_log
-
-  - debug: var=tmp_log
 
   - name: Remove logs
     file:
