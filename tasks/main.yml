@@ -6,17 +6,14 @@
 
 - name: Clear all artifacts from YUM repo
   become: yes
-  ignore_errors: yes
   shell: 'yum clean all'
 
 - name: Use no proxy definitions
-  include_tasks:
-    name: no_proxy.yml
+  include_tasks: no_proxy.yml
   when: http_proxy is not defined and https_proxy is not defined
 
 - name: Use proxy definitions
-  include_tasks:
-    name: with_proxy.yml
+  include_tasks: with_proxy.yml
   when: http_proxy is defined and https_proxy is defined
 
 - name: Set target bootstrap script name for 4.16.01
