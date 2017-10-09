@@ -4,6 +4,10 @@
   ignore_errors: yes
   shell: '{{ apigee_all }} stop'
 
+- name: Apigee uninstall
+  ignore_errors: yes
+  shell: "{{ apigee_service }} apigee-service uninstall"
+
 - name: Clear all artifacts from YUM repo
   become: yes
   shell: 'yum clean all'
@@ -25,9 +29,6 @@
   set_fact:
     bootstrap_script: '{{ opdk_installer_path }}/bootstrap_{{ opdk_version }}.sh'
   when: opdk_version | version_compare('4.16.01', '>')
-
-- name: Apigee uninstall
-  shell: "{{ apigee_service }} apigee-service uninstall"
 
 - name: Remove bootstrap script and folders
   become: yes
