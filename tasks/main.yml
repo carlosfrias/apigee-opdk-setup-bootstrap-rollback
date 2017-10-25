@@ -137,4 +137,4 @@
       state: absent
     with_items: "{{ tmp_log.files }}"
 
-  when: clear_logs is defined and clear_logs | bool == True
+  when: clear_logs is defined and clear_logs
