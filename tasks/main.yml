@@ -44,6 +44,8 @@
   - '{{ apigee_validate_config_file }}'
   - '{{ onboarding_config_file_path }}'
   - '{{ opdk_license_target_file_path }}'
+  - '{{ grafana_response_file }}'
+  - '{{ telegraf_response_file }}'
   - /etc/yum/vars/apigeepassword
   - /etc/yum/vars/apigeepriostage
   - /etc/yum/vars/apigeeuser
