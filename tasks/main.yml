@@ -30,81 +30,103 @@
     bootstrap_script: '{{ opdk_installer_path }}/bootstrap_{{ opdk_version }}.sh'
   when: opdk_version | version_compare('4.16.01', '>')
 
-- name: Remove bootstrap script and folders
-  become: yes
-  ignore_errors: yes
+- name: Find files to remove
+  find:
+    path: '{{ item.dir }}'
+    pattern: '{{ item.pattern }}'
+    file_type: file
+    recurse: yes
+  with_items:
+  - { dir: "/opt/nginx/", pattern: "conf.d" }
+  - { dir: "/etc/yum/vars/", pattern: "apigee*" }
+  - { dir: "/tmp/", pattern: "edge" }
+  register: remove
+
+- name: Remove files
   file:
-    path: '{{ item }}'
+    path: '{{ item.1.path }}'
     state: absent
     follow: yes
-  with_items:
-  - /opt/nginx/conf.d
-  - /etc/yum/vars/apigeepassword
-  - /etc/yum/vars/apigeepriostage
-  - /etc/yum/vars/apigeeuser
-  - '{{ bootstrap_script }}'
-  - '{{ apigee_validate_config_file }}'
-  - '{{ onboarding_config_file_path }}'
-  - '{{ opdk_license_target_file_path }}'
-  - '{{ grafana_response_file }}'
-  - '{{ telegraf_response_file }}'
-  - '{{ opdk_installation_config_file }}'
+  with_subelements:
+  - "{{ remove.results }}"
+  - files
 
 - block:
   - name: Find apigee & edge folders to remove on rollback
     find:
-      path: '{{ apigee_home }}'
-      pattern: 'apigee*'
+      path: '{{ item.dir }}'
+      pattern: '{{ item.pattern }}'
       recurse: no
       file_type: directory
     register: apigee_folders
+    with_items:
+    - { dir: "{{ apigee_home }}", pattern: "apigee*", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "edge*", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "edge*", file_type: "directory" }
+    - { dir: "{{ opdk_installer_path }}", pattern: "*.log", file_type: "file" }
+    - { dir: "{{ opdk_installer_path }}", pattern: "bootstrap*", file_type: "file" }
+    - { dir: "/opt", pattern: "nginx", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "data", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "etc", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "token", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "var/lock", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "var/run", file_type: "directory" }
 
-  - name: Find edge folders to remove on rollback
-    find:
-      path: '{{ apigee_home }}'
-      pattern: 'edge*'
-      recurse: no
-      file_type: directory
-    register: edge_folders
-
-  - name: Find /tmp scripts & logs to remove on rollback
-    find:
-      path: '{{ opdk_installer_path }}'
-      pattern: '*.log'
-      file_type: 'file'
-    register: tmp_log_files
-
-  - name: Find /tmp scripts & logs to remove on rollback
-    find:
-      path: '{{ opdk_installer_path }}'
-      pattern: 'bootstrap*'
-      file_type: 'file'
-    register: bootstrap_files
-
-  - name: Remove found apigee & edge folders on rollback
-    ignore_errors: yes
-    become: yes
+  - name: Remove files
     file:
-      path: '{{ item.path }}'
+      path: '{{ item.1.path }}'
       state: absent
       follow: yes
-    with_items:
-    - '{{ apigee_folders.files }}'
-    - '{{ edge_folders.files }}'
-    - '{{ tmp_log_files.files }}'
-    - '{{ bootstrap_files.files }}'
+    with_subelements:
+    - "{{ apigee_folders.results }}"
+    - files
 
-  - name: Remove nginx
-    file:
-      path: "{{ item }}"
-      state: absent
-    with_items:
-    - /opt/nginx
-    - "{{ apigee_home }}/data"
-    - "{{ apigee_home }}/etc"
-    - "{{ apigee_home }}/token"
-    - "{{ apigee_home }}/var/lock"
-    - "{{ apigee_home }}/var/run"
+#  - name: Find edge folders to remove on rollback
+#    find:
+#      path: '{{ apigee_home }}'
+#      pattern: 'edge*'
+#      recurse: no
+#      file_type: directory
+#    register: edge_folders
+
+#  - name: Find /tmp scripts & logs to remove on rollback
+#    find:
+#      path: '{{ opdk_installer_path }}'
+#      pattern: '*.log'
+#      file_type: 'file'
+#    register: tmp_log_files
+
+#  - name: Find /tmp scripts & logs to remove on rollback
+#    find:
+#      path: '{{ opdk_installer_path }}'
+#      pattern: 'bootstrap*'
+#      file_type: 'file'
+#    register: bootstrap_files
+
+#  - name: Remove found apigee & edge folders on rollback
+#    ignore_errors: yes
+#    become: yes
+#    file:
+#      path: '{{ item.path }}'
+#      state: absent
+#      follow: yes
+#    with_items:
+#    - '{{ apigee_folders.files }}'
+#    - '{{ edge_folders.files }}'
+#    - '{{ tmp_log_files.files }}'
+#    - '{{ bootstrap_files.files }}'
+
+#  - name: Remove nginx
+#    file:
+#      path: "{{ item }}"
+#      state: absent
+#    with_items:
+#    - /opt/nginx
+#    - "{{ apigee_home }}/data"
+#    - "{{ apigee_home }}/etc"
+#    - "{{ apigee_home }}/token"
+#    - "{{ apigee_home }}/var/lock"
+#    - "{{ apigee_home }}/var/run"
 
   - name: Determine current user
     shell: whoami
