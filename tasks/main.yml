@@ -38,17 +38,17 @@
     state: absent
     follow: yes
   with_items:
-  - '{{ bootstrap_script }}'
   - /opt/nginx/conf.d
-  - '{{ opdk_installation_config_file }}'
+  - /etc/yum/vars/apigeepassword
+  - /etc/yum/vars/apigeepriostage
+  - /etc/yum/vars/apigeeuser
+  - '{{ bootstrap_script }}'
   - '{{ apigee_validate_config_file }}'
   - '{{ onboarding_config_file_path }}'
   - '{{ opdk_license_target_file_path }}'
   - '{{ grafana_response_file }}'
   - '{{ telegraf_response_file }}'
-  - /etc/yum/vars/apigeepassword
-  - /etc/yum/vars/apigeepriostage
-  - /etc/yum/vars/apigeeuser
+  - '{{ opdk_installation_config_file }}'
 
 - block:
   - name: Find apigee & edge folders to remove on rollback
