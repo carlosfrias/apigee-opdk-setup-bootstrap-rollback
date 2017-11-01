@@ -8,10 +8,6 @@
   ignore_errors: yes
   shell: "{{ apigee_service }} apigee-service uninstall"
 
-- name: Clear all artifacts from YUM repo
-  become: yes
-  shell: 'yum clean all'
-
 - name: Use no proxy definitions
   include_tasks: no_proxy.yml
   when: http_proxy is not defined and https_proxy is not defined
@@ -42,6 +38,10 @@
   - { dir: "/tmp/", pattern: "edge" }
   register: remove
 
+- name: Clear all artifacts from YUM repo
+  become: yes
+  shell: 'yum clean all'
+
 - name: Remove files
   file:
     path: '{{ item.1.path }}'
@@ -56,8 +56,8 @@
     find:
       path: '{{ item.dir }}'
       pattern: '{{ item.pattern }}'
-      recurse: no
-      file_type: directory
+      recurse: yes
+      file_type: '{{ item.file_type }}'
     register: apigee_folders
     with_items:
     - { dir: "{{ apigee_home }}", pattern: "apigee*", file_type: "directory" }
@@ -146,19 +146,8 @@
 
   when: remove_apigee is defined and remove_apigee
 
-- block:
-  - name: Clear Edge logs on rollback
-    find:
-      path: '{{ apigee_home }}'
-      pattern: '*.log'
-      file_type: 'file'
-      recurse: yes
-    register: tmp_log
-
-  - name: Remove logs
-    file:
-      path: "{{ item.path }}"
-      state: absent
-    with_items: "{{ tmp_log.files }}"
-
+- name: Remove logs
+  file:
+    path: '{{ apigee_home }}/var/log/'
+    state: absent
   when: clear_logs is defined and clear_logs
