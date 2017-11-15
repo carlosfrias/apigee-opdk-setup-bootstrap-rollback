@@ -3,6 +3,7 @@
 - name: Gracefully Stop apigee components, if possible
   ignore_errors: yes
   shell: '{{ apigee_all }} stop'
+  when: apigee_all is defined and apigee_all | trim | length > 0
 
 - name: Apigee uninstall
   ignore_errors: yes
