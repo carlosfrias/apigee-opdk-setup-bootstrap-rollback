@@ -7,6 +7,7 @@
 - name: Apigee uninstall
   ignore_errors: yes
   shell: "{{ apigee_service }} apigee-service uninstall"
+  when: apigee_service is defined and apigee_service | trim | length > 0
 
 - name: Use no proxy definitions
   include_tasks: no_proxy.yml
