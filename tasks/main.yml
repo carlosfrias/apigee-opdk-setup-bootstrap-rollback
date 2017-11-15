@@ -83,53 +83,6 @@
     - "{{ apigee_folders.results }}"
     - files
 
-#  - name: Find edge folders to remove on rollback
-#    find:
-#      path: '{{ apigee_home }}'
-#      pattern: 'edge*'
-#      recurse: no
-#      file_type: directory
-#    register: edge_folders
-
-#  - name: Find /tmp scripts & logs to remove on rollback
-#    find:
-#      path: '{{ opdk_installer_path }}'
-#      pattern: '*.log'
-#      file_type: 'file'
-#    register: tmp_log_files
-
-#  - name: Find /tmp scripts & logs to remove on rollback
-#    find:
-#      path: '{{ opdk_installer_path }}'
-#      pattern: 'bootstrap*'
-#      file_type: 'file'
-#    register: bootstrap_files
-
-#  - name: Remove found apigee & edge folders on rollback
-#    ignore_errors: yes
-#    become: yes
-#    file:
-#      path: '{{ item.path }}'
-#      state: absent
-#      follow: yes
-#    with_items:
-#    - '{{ apigee_folders.files }}'
-#    - '{{ edge_folders.files }}'
-#    - '{{ tmp_log_files.files }}'
-#    - '{{ bootstrap_files.files }}'
-
-#  - name: Remove nginx
-#    file:
-#      path: "{{ item }}"
-#      state: absent
-#    with_items:
-#    - /opt/nginx
-#    - "{{ apigee_home }}/data"
-#    - "{{ apigee_home }}/etc"
-#    - "{{ apigee_home }}/token"
-#    - "{{ apigee_home }}/var/lock"
-#    - "{{ apigee_home }}/var/run"
-
   - name: Determine current user
     shell: whoami
     register: whoami
@@ -152,4 +105,11 @@
   file:
     path: '{{ apigee_home }}/var/log/'
     state: absent
-  when: clear_logs is defined and clear_logs
+  when: clear_logs is defined and clear_logs | bool == True
+
+- name: Remove on rollback
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ remove_on_rollback }}"
+  when: remove_on_rollback is defined
