@@ -10,13 +10,31 @@
   shell: "{{ apigee_service }} apigee-service uninstall"
   when: apigee_service is defined and apigee_service | trim | length > 0
 
-- name: Use no proxy definitions
-  include_tasks: no_proxy.yml
-  when: http_proxy is not defined and https_proxy is not defined
+#- name: Use no proxy definitions
+#  include_tasks: no_proxy.yml
+#  when: http_proxy is not defined and https_proxy is not defined
+#
+#- name: Use proxy definitions
+#  include_tasks: with_proxy.yml
+#  when: http_proxy is defined and https_proxy is defined
 
-- name: Use proxy definitions
-  include_tasks: with_proxy.yml
-  when: http_proxy is defined and https_proxy is defined
+- name: Remove apigee, edge, baas and qpid packages
+  become: yes
+  ignore_errors: yes
+  yum:
+    name: '{{ item }}'
+    state: absent
+  with_items:
+  - apigee*
+  - edge*
+  - baas*
+  - qpid*
+  - python-qpid-*
+  - libdb-cxx-*
+  - nginx-*
+  environment:
+    http_proxy: "{{ http_proxy }}"
+    https_proxy: "{{ https_proxy }}"
 
 - name: Set target bootstrap script name for 4.16.01
   set_fact:
