@@ -126,8 +126,6 @@
   when: clear_logs is defined and clear_logs | bool == True
 
 - name: Remove on rollback
-  file:
-    path: "{{ item }}"
-    state: absent
+  shell: "rm -rf {{ item }}"
   with_items: "{{ remove_on_rollback }}"
   when: remove_on_rollback is defined
