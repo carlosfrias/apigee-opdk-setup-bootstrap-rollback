@@ -1,2 +1,10 @@
 ---
 # defaults file for apigee-opdk-setup-bootstrap-rollback
+apigee_packages:
+- apigee*
+- edge*
+- baas*
+- qpid*
+- python-qpid-*
+- libdb-cxx-*
+- nginx-*
