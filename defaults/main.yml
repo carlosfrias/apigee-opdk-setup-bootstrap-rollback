@@ -8,3 +8,5 @@ apigee_packages:
 - python-qpid-*
 - libdb-cxx-*
 - nginx-*
+apigee_home: /opt/apigee
+opdk_installer_path: /tmp/edge
