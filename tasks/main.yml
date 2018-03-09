@@ -7,7 +7,7 @@
 
 - name: Apigee uninstall
   ignore_errors: yes
-  shell: "{{ apigee_service }} apigee-service uninstall"
+  shell: "/opt/apigee/apigee-service/bin/apigee-service apigee-service uninstall"
   when: apigee_service is defined and apigee_service | trim | length > 0
 
 - name: Remove apigee, edge, baas and qpid packages
