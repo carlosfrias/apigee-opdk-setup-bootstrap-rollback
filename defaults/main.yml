@@ -9,4 +9,4 @@ apigee_packages:
 - libdb-cxx-*
 - nginx-*
 
-remove_apigee: true
+remove_apigee: false

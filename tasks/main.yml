@@ -41,6 +41,7 @@
   - { dir: "/opt/nginx/", pattern: "conf.d" }
   - { dir: "/etc/yum/vars/", pattern: "apigee*" }
   - { dir: "/tmp/", pattern: "edge" }
+  - { dir: "/var/cache/yum", pattern: "*" }
   register: remove
 
 - name: Clear all artifacts from YUM repo
@@ -65,8 +66,10 @@
       file_type: '{{ item.file_type }}'
     register: apigee_folders
     with_items:
-    - { dir: "{{ apigee_home }}", pattern: "apigee*", file_type: "directory" }
-    - { dir: "{{ apigee_home }}", pattern: "edge*", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "apigee-adminapi*", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "apigee-attribution*", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "apigee-configutil*", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "apigee-lib*", file_type: "directory" }
     - { dir: "{{ apigee_home }}", pattern: "edge*", file_type: "directory" }
     - { dir: "{{ opdk_installer_path }}", pattern: "*.log", file_type: "file" }
     - { dir: "{{ opdk_installer_path }}", pattern: "bootstrap*", file_type: "file" }
@@ -74,8 +77,7 @@
     - { dir: "{{ apigee_home }}", pattern: "data", file_type: "directory" }
     - { dir: "{{ apigee_home }}", pattern: "etc", file_type: "directory" }
     - { dir: "{{ apigee_home }}", pattern: "token", file_type: "directory" }
-    - { dir: "{{ apigee_home }}", pattern: "var/lock", file_type: "directory" }
-    - { dir: "{{ apigee_home }}", pattern: "var/run", file_type: "directory" }
+    - { dir: "{{ apigee_home }}", pattern: "var", file_type: "directory" }
 
   - name: Remove files
     file:
