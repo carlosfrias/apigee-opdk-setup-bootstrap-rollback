@@ -90,17 +90,19 @@
     shell: whoami
     register: whoami
 
-  - name: Determine if safe to kill user owned process
-    set_fact:
-      kill_user: '{{ whoami.stdout != opdk_user_name }}'
+  - block:
+    - name: Determine if safe to kill user owned process
+      set_fact:
+        kill_user: '{{ whoami.stdout != opdk_user_name }}'
 
-  - name: Release any apigee user owned processes
-    ignore_errors: yes
-    become: yes
-    shell: 'pkill -u {{ opdk_user_name }}'
-    when: kill_user
-    async: 45
-    poll: 0
+    - name: Release any apigee user owned processes
+      ignore_errors: yes
+      become: yes
+      shell: 'pkill -u {{ opdk_user_name }}'
+      when: kill_user
+      async: 45
+      poll: 0
+    when: opdk_user_name is defined
 
   when: remove_apigee is defined and remove_apigee
 
