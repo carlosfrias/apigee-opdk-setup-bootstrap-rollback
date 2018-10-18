@@ -55,7 +55,7 @@
     follow: yes
   with_subelements:
   - "{{ remove.results }}"
-  - files
+#  - files
 
 - block:
   - name: Find apigee & edge folders to remove on rollback
