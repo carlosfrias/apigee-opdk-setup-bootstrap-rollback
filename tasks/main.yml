@@ -48,6 +48,10 @@
   become: yes
   shell: 'yum clean all'
 
+- name: Show file variable contents
+  debug:
+    var: files
+
 - name: Remove files
   file:
     path: '{{ item.1.path }}'
@@ -55,6 +59,7 @@
     follow: yes
   with_subelements:
   - "{{ remove.results }}"
+  - files
 
 - block:
   - name: Find apigee & edge folders to remove on rollback
