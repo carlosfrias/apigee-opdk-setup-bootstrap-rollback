@@ -18,8 +18,8 @@
     state: absent
   with_items: "{{ apigee_packages}}"
   environment:
-    http_proxy: "{{ http_proxy }}"
-    https_proxy: "{{ https_proxy }}"
+    http_proxy: "{{ http_proxy | default('') }}"
+    https_proxy: "{{ https_proxy | default('') }}"
 
 - name: Set target bootstrap script name for 4.16.01
   set_fact:
