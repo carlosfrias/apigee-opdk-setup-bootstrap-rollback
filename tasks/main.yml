@@ -20,6 +20,7 @@
   environment:
     http_proxy: "{{ http_proxy | default('') }}"
     https_proxy: "{{ https_proxy | default('') }}"
+    no_proxy: "{{ no_proxy | default('') }}"
 
 - name: Set target bootstrap script name for 4.16.01
   set_fact:
@@ -30,6 +31,10 @@
   set_fact:
     bootstrap_script: '{{ opdk_installer_path }}/bootstrap_{{ opdk_version }}.sh'
   when: opdk_version | version_compare('4.16.01', '>')
+
+- name: Clear all artifacts from YUM repo
+  become: yes
+  shell: 'yum clean all'
 
 - name: Find files to remove
   find:
@@ -43,10 +48,6 @@
   - { dir: "/tmp/", pattern: "edge" }
   - { dir: "/var/cache/yum", pattern: "*" }
   register: remove
-
-- name: Clear all artifacts from YUM repo
-  become: yes
-  shell: 'yum clean all'
 
 - name: Show file variable contents
   debug:
