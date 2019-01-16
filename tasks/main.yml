@@ -25,12 +25,12 @@
 - name: Set target bootstrap script name for 4.16.01
   set_fact:
     bootstrap_script: '{{ opdk_installer_path }}/bootstrap.sh'
-  when: opdk_version | version_compare('4.16.01', '==')
+  when: opdk_version is version_compare('4.16.01', '==')
 
 - name: Set target bootstrap script name for version > 4.16.01
   set_fact:
     bootstrap_script: '{{ opdk_installer_path }}/bootstrap_{{ opdk_version }}.sh'
-  when: opdk_version | version_compare('4.16.01', '>')
+  when: opdk_version is version_compare('4.16.01', '>')
 
 - name: Clear all artifacts from YUM repo
   become: yes
@@ -76,13 +76,13 @@
     - { dir: "{{ apigee_home }}", pattern: "apigee-configutil*", file_type: "directory" }
     - { dir: "{{ apigee_home }}", pattern: "apigee-lib*", file_type: "directory" }
     - { dir: "{{ apigee_home }}", pattern: "edge*", file_type: "directory" }
-    - { dir: "{{ opdk_installer_path }}", pattern: "*.log", file_type: "file" }
     - { dir: "{{ opdk_installer_path }}", pattern: "bootstrap*", file_type: "file" }
     - { dir: "/opt", pattern: "nginx", file_type: "directory" }
     - { dir: "{{ apigee_home }}", pattern: "data", file_type: "directory" }
     - { dir: "{{ apigee_home }}", pattern: "etc", file_type: "directory" }
     - { dir: "{{ apigee_home }}", pattern: "token", file_type: "directory" }
-    - { dir: "{{ apigee_home }}", pattern: "var", file_type: "directory" }
+    - { dir: "{{ apigee_home }}/var", pattern: "lock", file_type: "directory" }
+    - { dir: "{{ apigee_home }}/var", pattern: "run", file_type: "directory" }
 
   - name: Remove files
     file:
