@@ -118,7 +118,7 @@
 - name: Remove logs
   become: true
   file:
-    path: '{{ apigee_home }}/var/log/'
+    path: '{{ apigee_home }}/var/'
     state: absent
   when: clear_logs is defined and clear_logs | bool == True
 
