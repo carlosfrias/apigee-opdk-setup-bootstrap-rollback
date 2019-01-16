@@ -49,11 +49,12 @@
   - { dir: "/var/cache/yum", pattern: "*" }
   register: remove
 
-- name: Show file variable contents
-  debug:
-    var: files
+#- name: Show file variable contents
+#  debug:
+#    var: files
 
 - name: Remove files
+  become: true
   file:
     path: '{{ item.1.path }}'
     state: absent
@@ -85,6 +86,7 @@
     - { dir: "{{ apigee_home }}/var", pattern: "run", file_type: "directory" }
 
   - name: Remove files
+    become: true
     file:
       path: '{{ item.1.path }}'
       state: absent
@@ -114,12 +116,14 @@
   when: remove_apigee is defined and remove_apigee
 
 - name: Remove logs
+  become: true
   file:
     path: '{{ apigee_home }}/var/log/'
     state: absent
   when: clear_logs is defined and clear_logs | bool == True
 
 - name: Remove on rollback
+  become: true
   shell: "rm -rf {{ item }}"
   with_items: "{{ remove_on_rollback }}"
   when: remove_on_rollback is defined
