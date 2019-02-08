@@ -14,9 +14,8 @@
   become: yes
   ignore_errors: yes
   yum:
-    name: '{{ item }}'
+    name: '{{ apigee_packages }}'
     state: absent
-  with_items: "{{ apigee_packages}}"
   environment:
     http_proxy: "{{ http_proxy | default('') }}"
     https_proxy: "{{ https_proxy | default('') }}"
